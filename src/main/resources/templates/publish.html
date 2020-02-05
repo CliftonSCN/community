@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>public - CodePower</title>
+    <head th:insert="~{import :: head}"></head>
+</head>
+<body style="background-color: white">
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">码力社区</span>
+                <!--<span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>-->
+            </button>
+            <a class="navbar-brand" href="#">码力社区</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="搜索问题">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a th:if="${session.user == null}"
+                       href="https://github.com/login/oauth/authorize?client_id=74e6aac0d232e1447f4c&redirect_uri=http://localhost:8887/callback&scope=user&state=1">登录</a>
+                </li>
+                <!--<a th:href="@{https://github.com/login/oauth/authorize(client_id='2859958f9f059979ed3a'
+                    ,redirect_uri=${#httpServletRequest.getServletContext().getAttribute('redirectUri')}
+                    ,scope='user',state=1)}">登录</a>-->
+                <li class="dropdown" th:if="${session.user != null}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" th:text="${session.user.getName()}"><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">消息中心</a></li>
+                        <li><a href="#">个人资料</a></li>
+                        <li><a href="#">退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid" style="margin: 30px;">
+    <div class="row">
+        <div class="col-lg-9 col-md-12">
+            <h2>
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 发布
+            </h2>
+            <hr>
+            <form action="/publish" method="post">
+                <div class="alert alert-danger" role="alert" th:if="${error != null}" th:text="${error != null}?${error}"></div>
+                <div class="form-group">
+                    <label for="title">问题标题：</label>
+                    <input class="form-control" id="title" th:name="title" th:value="${question != null}?${question.title}" placeholder="简明概要">
+                </div>
+                <div class="form-group">
+                    <label for="description">问题描述：</label>
+                    <textarea placeholder="具体描述你提出的问题"  id="description" th:text="${question != null}?${question.description}" th:name="description" class="form-control" rows="10"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="title">标签：</label>
+                    <input class="form-control"  id="tag" th:name="tag" placeholder="10个字以内" th:value="${question != null}?${question.tag}">
+                </div>
+                <button type="submit" class="btn btn-success" style="margin-bottom: 20px;float: right;margin-right: 30px">发布问题</button>
+            </form>
+
+        </div>
+        <div class="col-lg-3 col-md-12">
+            <h3>注意：</h3>
+            凄凄切切群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群
+            凄凄切切群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群
+            凄凄切切群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群
+            凄凄切切群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群凄凄切
+            切群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群凄凄切切群
+            群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群凄凄切切群群群群群
+            群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群凄凄切切群群群群群群群群群群
+            群群群群群群群群群群群群群群群群群群群群群群群群群群凄凄切切群群群群群群群群群群群群群群群群
+            群群群群群群群群群群群群群群群群群群群群凄凄切切群群群群群群群群群群群群群群群群群群群群群
+            群群群群群群群群群群群群群群群凄凄切切群群群群群群群群群群群群群群群群群群群群群群
+            群群群群群群群群群群群群群
+            群凄凄切切群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群群
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
