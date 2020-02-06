@@ -1,9 +1,10 @@
 package top.clifton.community.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 import top.clifton.community.pojo.Question;
+
+import java.util.List;
 
 /**
  * @author Clifton
@@ -20,4 +21,10 @@ public interface QuestionMapper {
             + "      #{description,jdbcType=CLOB})")
     void insertQuestion(Question question);
 
+
+    @Select("select * from question")
+    @Results({
+            @Result(property = "user", column = "CREATOR", one = @One(select = "top.clifton.community.mapper.UserMapper.findByAccountId"))
+    })
+    List<Question> findListWithUser();
 }
