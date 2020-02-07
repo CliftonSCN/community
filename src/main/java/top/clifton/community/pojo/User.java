@@ -3,17 +3,17 @@ package top.clifton.community.pojo;
 public class User {
     private Integer id;
 
-    private String accountId;
+    private Integer accountId;
 
     private String name;
 
     private String token;
 
-    private Long gmtCreated;
-
-    private Long gmtModified;
-
     private String avatarUrl;
+
+    private Long gmtCreate;
+
+    private Long gmtModify;
 
     public Integer getId() {
         return id;
@@ -23,12 +23,12 @@ public class User {
         this.id = id;
     }
 
-    public String getAccountId() {
+    public Integer getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId == null ? null : accountId.trim();
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
     }
 
     public String getName() {
@@ -47,27 +47,27 @@ public class User {
         this.token = token == null ? null : token.trim();
     }
 
-    public Long getGmtCreated() {
-        return gmtCreated;
-    }
-
-    public void setGmtCreated(Long gmtCreated) {
-        this.gmtCreated = gmtCreated;
-    }
-
-    public Long getGmtModified() {
-        return gmtModified;
-    }
-
-    public void setGmtModified(Long gmtModified) {
-        this.gmtModified = gmtModified;
-    }
-
     public String getAvatarUrl() {
         return avatarUrl;
     }
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl == null ? null : avatarUrl.trim();
+    }
+
+    public Long getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Long gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Long getGmtModify() {
+        return gmtModify;
+    }
+
+    public void setGmtModify(Long gmtModify) {
+        this.gmtModify = gmtModify;
     }
 }

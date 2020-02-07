@@ -5,8 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import top.clifton.community.mapper.QuestionMapper;
+
 import top.clifton.community.pojo.Question;
+import top.clifton.community.service.QuestionService;
 
 /**
  * @author Clifton
@@ -16,13 +17,13 @@ import top.clifton.community.pojo.Question;
 public class QuestionController {
 
     @Autowired
-    private QuestionMapper questionMapper;
+    private QuestionService questionService;
 
     @GetMapping("/question/{id}")
     public String toQuestion(@PathVariable("id")int id,
                              Model model){
 
-        Question question = questionMapper.findByIdWithUser(id);
+        Question question = questionService.findByIdWithUser(id);
         model.addAttribute("question", question);
         return "question";
     }

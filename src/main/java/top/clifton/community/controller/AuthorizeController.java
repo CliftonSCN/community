@@ -1,23 +1,23 @@
 package top.clifton.community.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.server.Session;
-import org.springframework.http.HttpRequest;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import top.clifton.community.dto.AccessTokenDTO;
-import top.clifton.community.dto.GithubUser;
-import top.clifton.community.mapper.UserMapper;
-import top.clifton.community.pojo.User;
-import top.clifton.community.provider.GithubProvider;
+import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import top.clifton.community.dto.AccessTokenDTO;
+import top.clifton.community.dto.GithubUser;
+import top.clifton.community.pojo.User;
+import top.clifton.community.provider.GithubProvider;
+import top.clifton.community.service.UserService;
 
 /**
  * @author Clifton
@@ -39,7 +39,7 @@ public class AuthorizeController {
     private String redirect_uri;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     /**
      * 请求github登录授权，回调接收code，state
@@ -67,21 +67,21 @@ public class AuthorizeController {
         //成功获取用户信息
         if (userInfo != null) {
             //用户是否使用github登录过网站
-            User oldUser = userMapper.findByAccountId(userInfo.getId());
+            User oldUser = userService.findByAccountId(userInfo.getId());
 
             HttpSession session = request.getSession();
             //用户未使用github登录过网站
             if (oldUser == null) {
                 User user = new User();
-                user.setAccountId(String.valueOf(userInfo.getId()));
+                user.setAccountId(userInfo.getId());
                 user.setName(userInfo.getName());
                 user.setToken(UUID.randomUUID().toString());
                 user.setGmtCreate(System.currentTimeMillis());
-                user.setGmtModified(user.getGmtCreate());
+                user.setGmtModify(user.getGmtCreate());
                 user.setAvatarUrl(userInfo.getAvatar_url());
                 oldUser.setToken(user.getToken());
                 //持久化用户信息
-                userMapper.insertUser(user);
+                userService.insertUser(user);
                 session.setAttribute("user",user);
             }else {
                 session.setAttribute("user",oldUser);

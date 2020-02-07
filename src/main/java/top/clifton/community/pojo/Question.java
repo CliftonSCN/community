@@ -17,9 +17,19 @@ public class Question {
 
     private Long gmtCreate;
 
-    private Long gmtModified;
+    private Long gmtModify;
 
     private String description;
+
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Integer getId() {
         return id;
@@ -85,12 +95,12 @@ public class Question {
         this.gmtCreate = gmtCreate;
     }
 
-    public Long getGmtModified() {
-        return gmtModified;
+    public Long getGmtModify() {
+        return gmtModify;
     }
 
-    public void setGmtModified(Long gmtModified) {
-        this.gmtModified = gmtModified;
+    public void setGmtModify(Long gmtModify) {
+        this.gmtModify = gmtModify;
     }
 
     public String getDescription() {

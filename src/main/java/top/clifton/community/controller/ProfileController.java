@@ -1,7 +1,10 @@
 package top.clifton.community.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.github.pagehelper.page.PageMethod;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,15 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
+
 import top.clifton.community.mapper.QuestionMapper;
 import top.clifton.community.mapper.UserMapper;
 import top.clifton.community.pojo.Question;
 import top.clifton.community.pojo.User;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.List;
+import top.clifton.community.service.QuestionService;
+import top.clifton.community.service.UserService;
 
 /**
  * @author Clifton
@@ -29,10 +33,10 @@ public class ProfileController
 {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @Autowired
-    private QuestionMapper questionMapper;
+    private QuestionService questionService;
 
     @GetMapping("/{action}")
     public String toProfile(@PathVariable(name = "action") String action, Model model,
@@ -69,7 +73,7 @@ public class ProfileController
 
         // 查询所有数据，封装分页信息
         PageMethod.startPage(pn, 3);
-        List<Question> questionList = questionMapper.findListWithUserByAccountId(user.getAccountId());
+        List<Question> questionList = questionService.findListWithUserByAccountId(user.getAccountId());
         PageInfo<Question> pageInfo = new PageInfo<>(questionList, 3);
 
         model.addAttribute("pageInfo", pageInfo);

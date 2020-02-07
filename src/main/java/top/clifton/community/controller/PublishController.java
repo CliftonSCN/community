@@ -1,5 +1,7 @@
 package top.clifton.community.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,11 +9,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import top.clifton.community.mapper.QuestionMapper;
+
 import top.clifton.community.pojo.Question;
 import top.clifton.community.pojo.User;
-
-import javax.servlet.http.HttpServletRequest;
+import top.clifton.community.service.QuestionService;
 
 /**
  * @author Clifton
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PublishController {
 
     @Autowired
-    private QuestionMapper questionMapper;
+    private QuestionService questionService;
 
     @GetMapping("/publish")
     public String toPublish(){
@@ -31,7 +32,7 @@ public class PublishController {
     @GetMapping("/publish/{id}")
     public String toEdit(@PathVariable(name = "id") int id,
                          Model model){
-        Question question = questionMapper.findByIdWithUser(id);
+        Question question = questionService.findByIdWithUser(id);
         model.addAttribute("question",question);
 
         return "publish";
@@ -57,17 +58,17 @@ public class PublishController {
         }
 
         if (question.getId() != null){
-            question.setGmtModified(System.currentTimeMillis());
-            questionMapper.updateQuestion(question);
+            question.setGmtModify(System.currentTimeMillis());
+            questionService.updateQuestion(question);
         }else {
             User user = (User) request.getSession().getAttribute("user");
-            question.setCreator(Long.valueOf(user.getAccountId()));
+            question.setCreator(user.getAccountId());
             question.setCommentCount(0);
             question.setLikeCount(0);
             question.setViewCount(0);
             question.setGmtCreate(System.currentTimeMillis());
-            question.setGmtModified(question.getGmtCreate());
-            questionMapper.insertQuestion(question);
+            question.setGmtModify(question.getGmtCreate());
+            questionService.insertQuestion(question);
         }
         return "redirect:/";
     }

@@ -1,5 +1,6 @@
 package top.clifton.community.config;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -12,6 +13,7 @@ import top.clifton.community.interceptor.SessionInterceptor;
  * @create 2020/2/6 - 20:16
  */
 @Configuration
+@MapperScan("top.clifton.community.dao")
 public class WebConfig implements WebMvcConfigurer
 {
 
@@ -24,6 +26,6 @@ public class WebConfig implements WebMvcConfigurer
                 .addPathPatterns("/**").excludePathPatterns("/css/**")
                 .excludePathPatterns("/js/**").excludePathPatterns("/fonts/**")
                 .excludePathPatterns("/images/**").excludePathPatterns("/callback/**")
-        .excludePathPatterns("/github.com/**");
+        .excludePathPatterns("/github.com/**").excludePathPatterns("/logout");
     }
 }

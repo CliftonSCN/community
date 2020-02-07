@@ -1,16 +1,17 @@
 package top.clifton.community.interceptor;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
-import top.clifton.community.mapper.UserMapper;
-import top.clifton.community.pojo.User;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import top.clifton.community.pojo.User;
+import top.clifton.community.service.UserService;
 
 /**
  * @author Clifton
@@ -20,7 +21,7 @@ import javax.servlet.http.HttpSession;
 public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
@@ -39,7 +40,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         if ( user == null && cookies != null && cookies.length != 0) {
             for (Cookie cookie : cookies) {
                 if ("token".equals(cookie.getName())) {
-                    user = userMapper.findByToken(cookie.getValue());
+                    user = userService.findByToken(cookie.getValue());
                     if (user != null) {
                         // Tomcat中Session的默认失效时间为20分钟,spring boot中默认30分钟未活跃
                         session.setAttribute("user", user);
@@ -53,6 +54,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         }
         if (user == null){
             response.sendRedirect("/");
+            return false;
         }
         return true;
     }
