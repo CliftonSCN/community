@@ -27,4 +27,20 @@ public interface QuestionMapper {
             @Result(property = "user", column = "CREATOR", one = @One(select = "top.clifton.community.mapper.UserMapper.findByAccountId"))
     })
     List<Question> findListWithUser();
+
+    @Select("select * from question where creator = #{accountId}")
+    @Results({
+            @Result(property = "user", column = "CREATOR", one = @One(select = "top.clifton.community.mapper.UserMapper.findByAccountId"))
+    })
+    List<Question> findListWithUserByAccountId(@Param("accountId") String accountId);
+
+    @Select("select * from question where id = #{id}")
+    @Results({
+            @Result(property = "user", column = "CREATOR", one = @One(select = "top.clifton.community.mapper.UserMapper.findByAccountId"))
+    })
+    Question findByIdWithUser(@Param("id")int id);
+
+    @Update("update question set title = #{title}, description = #{description}, tag = #{tag}, gmt_modified = #{gmtModified} "
+            + "where id = ${id}")
+    void updateQuestion(Question question);
 }

@@ -2,6 +2,7 @@ package top.clifton.community.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +51,8 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callBack(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
-                           HttpServletResponse response){
+                           HttpServletResponse response,
+                           HttpServletRequest request){
         //封装请求参数
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(client_id);
@@ -66,10 +68,11 @@ public class AuthorizeController {
         if (userInfo != null) {
             //用户是否使用github登录过网站
             User oldUser = userMapper.findByAccountId(userInfo.getId());
-            User user = null;
+
+            HttpSession session = request.getSession();
             //用户未使用github登录过网站
             if (oldUser == null) {
-                user = new User();
+                User user = new User();
                 user.setAccountId(String.valueOf(userInfo.getId()));
                 user.setName(userInfo.getName());
                 user.setToken(UUID.randomUUID().toString());
@@ -79,6 +82,9 @@ public class AuthorizeController {
                 oldUser.setToken(user.getToken());
                 //持久化用户信息
                 userMapper.insertUser(user);
+                session.setAttribute("user",user);
+            }else {
+                session.setAttribute("user",oldUser);
             }
             response.addCookie(new Cookie("token", oldUser.getToken()));
         }

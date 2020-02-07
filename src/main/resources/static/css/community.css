@@ -2,9 +2,33 @@ body {
     background-color: white;
 }
 
+/*.left-side-bar {
+    border-right: 1px solid #bdbdbd;
+    height: 300px;
+}
+
+.right-side-bar {
+    border-left: 1px solid #bdbdbd;
+    height: 300px;
+}*/
+
+.list-group a {
+    border: none;
+}
+
+a.list-group-item.active {
+    border-radius:6px;
+    background-image: linear-gradient(to bottom,#2b76b7 0,#1f639e 100%);
+}
+
+.main-margin{
+    margin-top: 50px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
 .main {
     background-color: white;
-    margin: 30px;
 }
 
 .side {

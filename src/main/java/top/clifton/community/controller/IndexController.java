@@ -35,19 +35,6 @@ public class IndexController {
     public String toIndex(@RequestParam(value = "pn", defaultValue = "1")int pn,
                           HttpServletRequest request,
                           Model model){
-        HttpSession session = request.getSession();
-        Cookie[] cookies = request.getCookies();
-        if (session.getAttribute("user") == null && cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                if ("token".equals(cookie.getName())) {
-                    User user = userMapper.findByToken(cookie.getValue());
-                    if (user != null) {
-                        //Tomcat中Session的默认失效时间为20分钟,spring boot中默认30分钟未活跃
-                        session.setAttribute("user", user);
-                    }
-                }
-            }
-        }
 
         //查询所有数据，封装分页信息
         PageMethod.startPage(pn, 3);
