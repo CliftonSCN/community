@@ -39,4 +39,6 @@ public interface QuestionMapper {
     List<Question> findListWithUserByAccountId(@Param("accountId") Integer accountId);
 
     Question selectByPrimaryKeyWithUser(int id);
+
+    void incViewCount(int id);
 }

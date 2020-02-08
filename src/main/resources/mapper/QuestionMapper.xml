@@ -82,6 +82,8 @@
 
 
 
+
+
   <resultMap id="ResultMapWithUser" type="top.clifton.community.pojo.Question">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
@@ -119,6 +121,12 @@
     join user u
     on t1.creator = u.account_id
   </select>
+
+  <update id="incViewCount" >
+    update question
+    set view_count = view_count + 1
+    where id = #{id}
+  </update>
 
 
 

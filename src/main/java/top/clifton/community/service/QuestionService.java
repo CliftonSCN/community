@@ -18,4 +18,6 @@ public interface QuestionService {
     void updateQuestion(Question question);
 
     void insertQuestion(Question question);
+
+    void incViewCount(int id);
 }

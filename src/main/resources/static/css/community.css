@@ -122,7 +122,9 @@ a.list-group-item.active {
 }
 
 .jumbotron {
-    margin: 50px;
+    padding-right: 60px;
+    padding-left: 60px;
+    border-radius: 8px;
 }
 
 .comment {

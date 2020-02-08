@@ -42,4 +42,9 @@ public class QuestionServiceImpl implements QuestionService {
     public void insertQuestion(Question question) {
         questionMapper.insert(question);
     }
+
+    @Override
+    public void incViewCount(int id) {
+        questionMapper.incViewCount(id);
+    }
 }
