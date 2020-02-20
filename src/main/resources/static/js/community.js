@@ -5,7 +5,7 @@
 /**
  * 提交回复
  */
-function post() {
+function post_comment() {
     var questionId = $("#question_id").val();
     var content = $("#comment_content").val();
     comment2target(questionId, 1, content);
@@ -27,18 +27,19 @@ function comment2target(targetId, type, content) {
             "type": type
         }),
         success: function (response) {
-            if (response.code == 200) {
+            if (response.code === 200) {
                 window.location.reload();
             } else {
-                if (response.code == 2003) {
-                    var isAccepted = confirm(response.message);
-                    if (isAccepted) {
-                        window.open("https://github.com/login/oauth/authorize?client_id=2859958f9f059979ed3a&redirect_uri=" + document.location.origin + "/callback&scope=user&state=1");
-                        window.localStorage.setItem("closable", true);
-                    }
-                } else {
-                    alert(response.message);
-                }
+                alert(response.message);
+                /* if (response.code == 2003) {
+                     var isAccepted = confirm(response.message);
+                     if (isAccepted) {
+                         window.open("https://github.com/login/oauth/authorize?client_id=2859958f9f059979ed3a&redirect_uri=" + document.location.origin + "/callback&scope=user&state=1");
+                         window.localStorage.setItem("closable", true);
+                     }
+                 } else {
+                     alert(response.message);
+                 }*/
             }
         },
         dataType: "json"
@@ -49,6 +50,68 @@ function comment(e) {
     var commentId = e.getAttribute("data-id");
     var content = $("#input-" + commentId).val();
     comment2target(commentId, 2, content);
+}
+
+function test() {
+    alert(123);
+}
+
+/*
+    <div class="sub-comment-reply media">
+        <div class="media-left">
+            <a href="#">
+                <img class="media-object" src="">
+            </a>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading">
+
+            </h4>
+            <span text=""></span>
+        </div>
+    </div>*/
+function emergeSubComments(e) {
+    var isLoad = e.getAttribute("is-loaded");
+    //第一次展开二级评论
+    if (isLoad === "0") {
+        var cid = e.getAttribute("data-cid");
+        var collapse = $("#collapse-" + cid);
+
+        $.getJSON("/comment/" + cid, function (response) {
+            var comments = response.data;
+            if (comments != null) {
+                $.each(comments, function (index, comment) {
+                    var mediaLeftElement = $("<div/>", {
+                        "class": "media-left"
+                    }).append($("<img/>", {
+                        "class": "media-object img-rounded",
+                        "src": comment.user.avatarUrl
+                    }));
+
+                    var mediaBodyElement = $("<div/>", {
+                        "class": "media-body"
+                    }).append($("<h4/>", {
+                        "class": "media-heading",
+                        "html": comment.user.name
+                    })).append($("<div/>", {
+                        "html": comment.content
+                    })).append($("<div/>", {
+                        "class": "menu"
+                    }).append($("<span/>", {
+                        "class": "pull-right",
+                        "html": moment(comment.gmtCreate).format('YYYY-MM-DD')
+                    })));
+
+                    var mediaElement = $("<div/>", {
+                        "class": "sub-comment-reply media"
+                    }).append(mediaLeftElement).append(mediaBodyElement);
+
+                    collapse.prepend(mediaElement);
+                });
+            }
+            e.setAttribute("is-loaded", "1");
+        });
+    }
 }
 
 /**

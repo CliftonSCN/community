@@ -18,8 +18,8 @@
                 <span th:text="${sectionName}"></span>
             </h2>
             <hr>
-
-            <div class="media" th:each="question :${pageInfo.list}">
+            <!--我的问题列表-->
+            <div class="media" th:each="question :${pageInfo.list}" th:if="${section == 'questions'}">
                 <div class="media-left">
                     <a href="#">
                         <img class="media-object" th:src="${question.user.avatarUrl}">
@@ -32,21 +32,37 @@
                             th:text="${question.viewCount}"></span> 次浏览 • 2020-02-02 23:10</span>
                 </div>
             </div>
+            <!--通知列表-->
+            <div th:if="${section == 'replies'}">
+
+                <div class="media" th:each="notification : ${pageInfo.list}">
+                    <div class="media-body">
+                        <p class="media-heading">
+                            <span th:text="${notification.notifierName +' '}+${notification.type == 1?'回复了问题':'回复了评论'}+' '"></span>
+                            <a th:href="@{'/notification/'+ ${notification.id}}"
+                               th:text="${notification.outerTitle}">
+                            </a>
+                            <span class="label label-danger" th:if="${notification.status == 0}">未读</span>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
             <!-- 分页 -->
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     <li th:class="${pageInfo.isFirstPage}?disabled">
-                        <a th:href="${pageInfo.isFirstPage}?'#':@{/profile/questions(pn=${pageInfo.pageNum-1})}" aria-label="Previous">
+                        <a th:href="${pageInfo.isFirstPage}?'#':@{'/profile/'+${section}(pn=${pageInfo.pageNum-1})}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
 
                     <li th:class="${pageInfo.pageNum == num}?active" th:each="num:${pageInfo.navigatepageNums}">
-                        <a th:href="@{/profile/questions(pn=${num})}" th:text="${num}"></a>
+                        <a th:href="@{'/profile/'+${section}(pn=${num})}" th:text="${num}"></a>
                     </li>
 
                     <li th:class="${pageInfo.isLastPage}?disabled">
-                        <a th:href="${pageInfo.isLastPage}?'#':@{/profile/questions(pn=${pageInfo.pageNum+1})}" aria-label="Next">
+                        <a th:href="${pageInfo.isLastPage}?'#':@{'/profile/'+${section}(pn=${pageInfo.pageNum+1})}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -58,7 +74,7 @@
                 <a href="/profile/questions" class="list-group-item" th:class="${section == 'questions'}?'list-group-item active':'list-group-item'">
                     我的提问
                 </a>
-                <a href="/profile/replies" class="list-group-item" th:class="${section == 'replies'}?'list-group-item active':'list-group-item'">所有回复<span class="badge">12</span></a>
+                <a href="/profile/replies" class="list-group-item" th:class="${section == 'replies'}?'list-group-item active':'list-group-item'">所有回复<span th:if="${session.unreadCount != 0}" class="badge" th:text="${session.unreadCount}"></span></a>
             </div>
         </div>
     </div>

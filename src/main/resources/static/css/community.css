@@ -2,6 +2,53 @@ body {
     background-color: white;
 }
 
+.question-ul{
+    list-style: none;
+    padding-left: 0px;
+    font-size: 16px;
+}
+
+.question-ul a{
+    cursor: pointer;
+    color: #155faa;
+    text-decoration: none;
+    padding: 5px 0px 5px 0px;;
+}
+
+.sub-comment-form{
+    margin: 20px 10px 0px 10px;
+    text-align: right;
+}
+
+.sub-comment-reply .media-left{
+    margin-right: 5px;
+}
+
+.sub-comment-reply{
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.sub-comment-form button{
+    margin-right: 15px;
+    padding: 4px 9px;
+}
+
+.comment-operator{
+    margin-top:2px;
+}
+
+.comment-operator a{
+    color: #999;
+    cursor: pointer;
+    vertical-align: -2px;
+}
+
+.comment-operator a:hover{
+    color: #00a8c6;
+    text-decoration: none;
+}
+
 /*.left-side-bar {
     border-right: 1px solid #bdbdbd;
     height: 300px;
@@ -146,12 +193,12 @@ a.list-group-item.active {
     border-radius: 5px;
     margin-top: 10px;
     border: 1px solid #eee;
-    padding-top: 15px;
+    padding: 20px;
     margin-bottom: 15px;
 }
 
 .sub-comments .btn {
-    margin: 10px 0;
+    margin-top: 10px;
 }
 
 .comment-sp {
@@ -180,6 +227,12 @@ a.list-group-item.active {
 
 .menu .active {
     color: #499ef3;
+}
+
+a{
+
+    text-decoration:none;
+
 }
 
 .menu .icon:hover {

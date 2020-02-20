@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,15 +36,20 @@ public class IndexController {
 
     @GetMapping("/")
     public String toIndex(@RequestParam(value = "pn", defaultValue = "1")int pn,
+                          @RequestParam(value = "search", required = false)  String search,
                           HttpServletRequest request,
                           Model model){
+        if (StringUtils.isBlank(search)){
+            search = null;
+        }
 
         //查询所有数据，封装分页信息
         PageMethod.startPage(pn, 3);
-        List<Question> questionList = questionService.findListWithUser();
+        List<Question> questionList = questionService.findListWithUser(search);
         PageInfo<Question> pageInfo = new PageInfo<>(questionList, 3);
 
         model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("search", search);
 
         return "index";
     }

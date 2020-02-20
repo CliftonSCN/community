@@ -7,8 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import top.clifton.community.exception.QuestionNotFoundException;
+import top.clifton.community.pojo.Comment;
 import top.clifton.community.pojo.Question;
+import top.clifton.community.service.CommentService;
 import top.clifton.community.service.QuestionService;
+
+import java.util.List;
 
 /**
  * @author Clifton
@@ -20,6 +24,9 @@ public class QuestionController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private CommentService commentService;
+
     @GetMapping("/question/{id}")
     public String toQuestion(@PathVariable("id")int id,
                              Model model){
@@ -28,7 +35,16 @@ public class QuestionController {
         if (question == null){
             throw new QuestionNotFoundException("问题已经被删除了！");
         }
+
+        //查出所有的一级评论
+        List<Comment> levelFirstCommentList = commentService.findLevelFirstCommentList(question.getId());
+
+        //相关问题
+        List<Question> relatedQuestions = questionService.findRelatedQuestion(id, question.getTag());
+        model.addAttribute("comments",levelFirstCommentList);
         model.addAttribute("question", question);
+        model.addAttribute("relatedQuestions", relatedQuestions);
+
         questionService.incViewCount(id);
         return "question";
     }

@@ -9,7 +9,7 @@ import java.util.List;
  * @create 2020/2/7 - 17:42
  */
 public interface QuestionService {
-    List<Question> findListWithUser();
+    List<Question> findListWithUser(String search);
 
     List<Question> findListWithUserByAccountId(Integer accountId);
 
@@ -20,4 +20,8 @@ public interface QuestionService {
     void insertQuestion(Question question);
 
     void incViewCount(int id);
+
+    void incCommentCount(Integer parentId);
+
+    List<Question> findRelatedQuestion(int id, String tag);
 }

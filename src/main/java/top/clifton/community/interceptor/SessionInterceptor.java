@@ -11,6 +11,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import top.clifton.community.pojo.User;
+import top.clifton.community.service.NotificationService;
 import top.clifton.community.service.UserService;
 
 /**
@@ -22,6 +23,9 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
@@ -48,6 +52,10 @@ public class SessionInterceptor implements HandlerInterceptor {
                     break;
                 }
             }
+        }
+        if (user != null){
+            int unReadCount = notificationService.selectUnReadCount(user.getAccountId());
+            session.setAttribute("unreadCount", unReadCount);
         }
         if (request.getServletPath().equals("/")){
             return true;

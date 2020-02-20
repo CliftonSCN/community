@@ -19,8 +19,12 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionMapper questionMapper;
 
     @Override
-    public List<Question> findListWithUser() {
-        return questionMapper.selectAll();
+    public List<Question> findListWithUser(String search) {
+        if (search != null) {
+            String[] searchs = search.split(" ");
+            search = String.join("|", searchs);
+        }
+        return questionMapper.selectAll(search);
     }
 
     @Override
@@ -46,5 +50,17 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void incViewCount(int id) {
         questionMapper.incViewCount(id);
+    }
+
+    @Override
+    public void incCommentCount(Integer id) {
+        questionMapper.incCommentCount(id);
+    }
+
+    @Override
+    public List<Question> findRelatedQuestion(int id, String tag) {
+        String[] tags = tag.split(",");
+        String regexpTag = String.join("|", tags);
+        return questionMapper.selectRelated(id, regexpTag);
     }
 }

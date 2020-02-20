@@ -34,11 +34,15 @@ public interface QuestionMapper {
 
     int updateByPrimaryKey(Question record);
 
-    List<Question> selectAll();
+    List<Question> selectAll(String search);
 
     List<Question> findListWithUserByAccountId(@Param("accountId") Integer accountId);
 
     Question selectByPrimaryKeyWithUser(int id);
 
     void incViewCount(int id);
+
+    void incCommentCount(Integer id);
+
+    List<Question> selectRelated(@Param("id")int id, @Param("tag")String tag);
 }

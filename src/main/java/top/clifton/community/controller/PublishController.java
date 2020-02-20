@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import top.clifton.community.cache.TagCache;
 import top.clifton.community.pojo.Question;
 import top.clifton.community.pojo.User;
 import top.clifton.community.service.QuestionService;
@@ -25,7 +26,8 @@ public class PublishController {
     private QuestionService questionService;
 
     @GetMapping("/publish")
-    public String toPublish(){
+    public String toPublish(Model model){
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
@@ -34,7 +36,7 @@ public class PublishController {
                          Model model){
         Question question = questionService.findByIdWithUser(id);
         model.addAttribute("question",question);
-
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 

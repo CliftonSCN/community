@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>public - CodePower</title>
     <head th:insert="~{import :: head}"></head>
+    <head th:insert="~{import :: markdown}"></head>
 </head>
 <body style="background-color: white">
 
@@ -23,13 +24,56 @@
                     <label for="title">问题标题：</label>
                     <input class="form-control" id="title" th:name="title" th:value="${question != null}?${question.title}" placeholder="简明概要">
                 </div>
-                <div class="form-group">
-                    <label for="description">问题描述：</label>
-                    <textarea placeholder="具体描述你提出的问题"  id="description" th:text="${question != null}?${question.description}" th:name="description" class="form-control" rows="10"></textarea>
+
+                <div class="form-group" id="question-editor">
+                    <label for="description">问题补充 (必填，请参照右侧提示):</label>
+                    <textarea name="description" id="description" th:text="${question != null}?${question.description}" style="display:none;"
+                              class="form-control"
+                              cols="30"
+                              rows="10"></textarea>
                 </div>
+                <script type="text/javascript">
+                    $(function () {
+                        var editor = editormd("question-editor", {
+                            width: "100%",
+                            height: 350,
+                            path: "/js/lib/",
+                            delay: 0,
+                            watch: false,
+                            placeholder: "请输入问题描述",
+                            imageUpload: true,
+                            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                            imageUploadURL: "/file/upload",
+                        });
+                    });
+                </script>
+
                 <div class="form-group">
                     <label for="title">标签：</label>
-                    <input class="form-control"  id="tag" th:name="tag" placeholder="10个字以内" th:value="${question != null}?${question.tag}">
+                    <input class="form-control" id="tag" th:name="tag" placeholder="10个字以内" th:value="${question != null}?${question.tag}" onclick="showSelectTag()">
+                    <div id="select-tag" class="publish-tag-tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" th:each="selectCategory,selectCategoryStat: ${tags}"
+                                th:class="${selectCategoryStat.first ? 'active':''}">
+                                <a th:href="${'#'+selectCategory.categoryName}" aria-controls="home" role="tab"
+                                   data-toggle="tab" th:text="${selectCategory.categoryName}"></a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" th:id="${selectCategory.categoryName}"
+                                 th:each="selectCategory: ${tags}"
+                                 th:class="${selectCategoryStat.first ? 'active tab-pane':'tab-pane'}">
+                                <span>
+                                    <span th:each="selectTag: ${selectCategory.tags}">
+                                    <span class="community-tag" onclick="selectTag(this)"
+                                          th:data-tag="${selectTag}"
+                                          th:text="${' '+selectTag}">
+                                    </span>
+                                </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-success" style="margin-bottom: 20px;float: right;margin-right: 30px">发布问题</button>
             </form>
