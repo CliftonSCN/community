@@ -9,9 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import top.clifton.community.dto.TagDTO;
 
 
-/**
- * Created by codedrinker on 2019/6/5.
- */
 public class TagCache {
     public static List<TagDTO> get() {
         List<TagDTO> tagDTOS = new ArrayList<>();

@@ -2,6 +2,7 @@ package top.clifton.community.service;
 
 import top.clifton.community.pojo.Question;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,4 +25,8 @@ public interface QuestionService {
     void incCommentCount(Integer parentId);
 
     List<Question> findRelatedQuestion(int id, String tag);
+
+    Question findById(int parseInt);
+
+    void updateCount(ArrayList<Question> list);
 }

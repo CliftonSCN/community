@@ -2,6 +2,7 @@ package top.clifton.community.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -38,13 +39,13 @@ public class CommentController
         comment.setLikeCount(0L);
         comment.setCommentCount(0);
         comment.setCommentator(user.getAccountId());
-        int row = commentService.addComment(comment);
+        int questionId = commentService.addComment(comment);
+        comment.setUser(user);
+        String message = JSON.toJSONString(comment);
 
-        QuestionWebSocket.systemSendMessageToUser(String.valueOf(user.getAccountId()), "收到"+user.getName()+"的消息了："+comment.getContent());
-
-        if (row != 1) {
-            return new JsonDto(CodeEnum.SERVER_ERROR);
-        }
+//        QuestionWebSocket.systemSendMessageToUser(String.valueOf(user.getAccountId()), message);
+        //当评论后，需向所有打开连接并且 questionId一样 的人发消息
+        QuestionWebSocket.sendInfo(String.valueOf(questionId), message);
 
         return new JsonDto(CodeEnum.SUCCESS);
     }

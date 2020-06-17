@@ -145,6 +145,56 @@
     where id = #{id}
   </update>
 
+    <update id="updateCountBatch" parameterType="list">
+        update question
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="view_count =case" suffix="end,">
+                <foreach collection="list" item="q" index="index">
+                    <if test="q.viewCount!=null">
+                        when id=#{q.id} then #{q.viewCount}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" like_count =case" suffix="end,">
+                <foreach collection="list" item="q" index="index">
+                    <if test="q.likeCount!=null">
+                        when id=#{q.id} then #{q.likeCount}
+                    </if>
+                </foreach>
+            </trim>
+
+            <trim prefix="comment_count =case" suffix="end," >
+                <foreach collection="list" item="q" index="index">
+                    <if test="q.commentCount!=null">
+                        when id=#{q.id} then #{q.commentCount}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="q" index="index" >
+            id=#{q.id}
+        </foreach>
+    </update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <select id="selectByExampleWithBLOBs" parameterType="top.clifton.community.pojo.QuestionExample"
             resultMap="ResultMapWithBLOBs">

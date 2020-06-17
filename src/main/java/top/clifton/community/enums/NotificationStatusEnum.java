@@ -1,8 +1,5 @@
 package top.clifton.community.enums;
 
-/**
- * Created by codedrinker on 2019/6/14.
- */
 public enum NotificationStatusEnum {
     UNREAD(0), READ(1);
     private int status;

@@ -6,6 +6,7 @@ import top.clifton.community.dao.QuestionMapper;
 import top.clifton.community.pojo.Question;
 import top.clifton.community.service.QuestionService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,5 +63,15 @@ public class QuestionServiceImpl implements QuestionService {
         String[] tags = tag.split(",");
         String regexpTag = String.join("|", tags);
         return questionMapper.selectRelated(id, regexpTag);
+    }
+
+    @Override
+    public Question findById(int id) {
+        return questionMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void updateCount(ArrayList<Question> list) {
+        questionMapper.updateCountBatch(list);
     }
 }

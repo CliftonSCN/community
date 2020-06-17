@@ -1,13 +1,12 @@
-/**
- * Created by codedrinker on 2019/6/1.
- */
 
 /**
  * 提交回复
  */
 function post_comment() {
     var questionId = $("#question_id").val();
-    var content = $("#comment_content").val();
+    var commentTextarea = $("#comment_content");
+    var content = commentTextarea.val();
+    commentTextarea.val("");
     comment2target(questionId, 1, content);
 }
 
@@ -28,7 +27,7 @@ function comment2target(targetId, type, content) {
         }),
         success: function (response) {
             if (response.code === 200) {
-                window.location.reload();
+                //window.location.reload();
             } else {
                 alert(response.message);
                 /* if (response.code == 2003) {
@@ -48,12 +47,108 @@ function comment2target(targetId, type, content) {
 
 function comment(e) {
     var commentId = e.getAttribute("data-id");
-    var content = $("#input-" + commentId).val();
+    commentInput = $("#input-" + commentId);
+    var content = commentInput.val();
+    commentInput.val("");
     comment2target(commentId, 2, content);
 }
 
 function test() {
     alert(123);
+}
+
+/*
+<div class="questionComment media">
+    <div class="media-left">
+            <img class="media-object" th:src="${comment.user.avatarUrl}">
+    </div>
+    <div class="media-body">
+        <h5 class="media-heading">
+            <span th:text="${comment.user.name}"></span>
+        </h5>
+        <span th:text="${comment.content}"></span>
+        <div class="comment-operator">
+            <a><span class="glyphicon glyphicon-thumbs-up"></span>赞</a>
+            <a th:href="'#collapse-'+${comment.id}" aria-expanded="false" class="collapsed" is-loaded="0"
+               data-toggle="collapse" th:data-cid="${comment.id}" onclick="emergeSubComments(this)"
+            >
+                <span class="glyphicon glyphicon-comment"></span>
+                回复
+                <span th:id="'subCommentCount-'+${comment.id}" th:text="${comment.commentCount}"></span>
+            </a>
+            <!--二级评论隐藏域-->
+            <div class="sub-comments collapse" th:id="'collapse-'+${comment.id}">
+
+                <div class="sub-comment-form">
+                    <input th:id="'input-'+${comment.id}" class="form-control" placeholder="评论一下">
+                    <button type="button" class="btn btn-success" th:data-id="${comment.id}" onclick="comment(this)">回复</button>
+                </div>
+            </div>
+            <span class="text-desc" style="float: right!important;"><span
+                    th:text="${#dates.format(comment.gmtCreate,'yyyy-MM-dd HH:mm')}"></span></span>
+        </div>
+    </div>
+</div>
+*/
+function createQuestionComment(comment) {
+    //媒体对象左侧
+    var mediaLeftElement = $("<div/>", {
+        "class": "media-left"
+    }).append($("<img/>", {
+        "class": "media-object img-rounded",
+        "src": comment.user.avatarUrl
+    }));
+
+    //评论按钮
+    var commetOperator = $("<a/>",{
+        "href":"#collapse-"+comment.id,
+        "aria-expanded":"false",
+        "class":"collapsed",
+        "is-loaded":"0",
+        "data-toggle":"collapse",
+        "data-cid":comment.id,
+        "onclick":"emergeSubComments(this)"
+    }).append($("<span/>"),{
+        class:"glyphicon glyphicon-comment"
+    }).append("回复").append($("<span/>"),{
+        "id":"subCommentCount-"+comment.id,
+        "html":comment.commentCount
+    });
+
+    //collapse
+    var collapse = $("<div/>",{
+        "class":"sub-comments collapse",
+        "id":"collapse-"+comment.id
+    });
+
+    //按钮操作区
+    var operatorArea = $("<div/>",{
+        "class":"comment-operator",
+    }).append(
+        $("<a/>").append($("<span/>",{
+        "class":"glyphicon glyphicon-thumbs-up"
+    })).append("赞")).append(commetOperator).append(collapse).append($("<span/>",{
+        "class":"text-desc",
+        "style":"float: right!important;",
+        "html":moment(comment.gmtCreate).format('yyyy-MM-dd HH:mm')
+    }));
+
+    //媒体主体
+    var mediaBodyElement = $("<div/>", {
+        "class": "media-body"
+    }).append($("<h5/>", {
+        "class": "media-heading",
+        "html": comment.user.name
+    })).append($("<span/>", {
+        "html": comment.content
+    })).append(operatorArea);
+
+    var media = $("<div/>",{
+        "class":"questionComment media"
+    }).append(mediaLeftElement).append(mediaBodyElement);
+
+    return media;
+
 }
 
 /*
@@ -70,6 +165,34 @@ function test() {
             <span text=""></span>
         </div>
     </div>*/
+function createSubComment(comment) {
+    var mediaLeftElement = $("<div/>", {
+        "class": "media-left"
+    }).append($("<img/>", {
+        "class": "media-object img-rounded",
+        "src": comment.user.avatarUrl
+    }));
+
+    var mediaBodyElement = $("<div/>", {
+        "class": "media-body"
+    }).append($("<h4/>", {
+        "class": "media-heading",
+        "html": comment.user.name
+    })).append($("<div/>", {
+        "html": comment.content
+    })).append($("<div/>", {
+        "class": "menu"
+    }).append($("<span/>", {
+        "class": "pull-right",
+        "html": moment(comment.gmtCreate).format('YYYY-MM-DD')
+    })));
+
+    var mediaElement = $("<div/>", {
+        "class": "sub-comment-reply media"
+    }).append(mediaLeftElement).append(mediaBodyElement);
+    return mediaElement;
+}
+
 function emergeSubComments(e) {
     var isLoad = e.getAttribute("is-loaded");
     //第一次展开二级评论
@@ -81,30 +204,7 @@ function emergeSubComments(e) {
             var comments = response.data;
             if (comments != null) {
                 $.each(comments, function (index, comment) {
-                    var mediaLeftElement = $("<div/>", {
-                        "class": "media-left"
-                    }).append($("<img/>", {
-                        "class": "media-object img-rounded",
-                        "src": comment.user.avatarUrl
-                    }));
-
-                    var mediaBodyElement = $("<div/>", {
-                        "class": "media-body"
-                    }).append($("<h4/>", {
-                        "class": "media-heading",
-                        "html": comment.user.name
-                    })).append($("<div/>", {
-                        "html": comment.content
-                    })).append($("<div/>", {
-                        "class": "menu"
-                    }).append($("<span/>", {
-                        "class": "pull-right",
-                        "html": moment(comment.gmtCreate).format('YYYY-MM-DD')
-                    })));
-
-                    var mediaElement = $("<div/>", {
-                        "class": "sub-comment-reply media"
-                    }).append(mediaLeftElement).append(mediaBodyElement);
+                    var mediaElement = createSubComment(comment);
 
                     collapse.prepend(mediaElement);
                 });

@@ -15,6 +15,19 @@ public class User {
 
     private Long gmtModify;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", accountId=" + accountId +
+                ", name='" + name + '\'' +
+                ", token='" + token + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtModify=" + gmtModify +
+                '}';
+    }
+
     public Integer getId() {
         return id;
     }

@@ -35,17 +35,20 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public int addComment(Comment comment) {
+        int questionId = 0;
 
         if (comment.getType() == 2){
             commentMapper.incCommentCount(comment.getParentId());
             Comment parentComment = commentMapper.selectByPrimaryKey(comment.getParentId());
+            questionId = parentComment.getParentId();
             questionMapper.incCommentCount(parentComment.getParentId());
         }else {
             questionMapper.incCommentCount(comment.getParentId());
+            questionId = comment.getParentId();
         }
-        int insert = commentMapper.insert(comment);
+        commentMapper.insert(comment);
         createNotify(comment);
-        return insert;
+        return questionId;
     }
 
     private void createNotify(Comment comment) {

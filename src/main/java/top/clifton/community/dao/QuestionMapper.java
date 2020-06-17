@@ -1,5 +1,6 @@
 package top.clifton.community.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import top.clifton.community.pojo.Question;
@@ -45,4 +46,6 @@ public interface QuestionMapper {
     void incCommentCount(Integer id);
 
     List<Question> selectRelated(@Param("id")int id, @Param("tag")String tag);
+
+    void updateCountBatch(ArrayList<Question> list);
 }

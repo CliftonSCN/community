@@ -2,9 +2,7 @@ package top.clifton.community.dto;
 
 import java.util.List;
 
-/**
- * Created by codedrinker on 2019/6/5.
- */
+
 public class TagDTO {
     private String categoryName;
     private List<String> tags;
