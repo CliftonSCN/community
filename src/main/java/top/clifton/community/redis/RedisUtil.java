@@ -52,12 +52,10 @@ public class RedisUtil {
         return opsForSet.members(key);
     }
 
-   /* public void mPut(String key, Map<String, String> map){
+   public void mPut(String key, Map<String, String> map){
         HashOperations<String, Object, Object> opsForHash = redisTemplate.opsForHash();
         opsForHash.putAll(key, map);
-        ListOperations<String, String> opsForList = redisTemplate.opsForList();
-        opsForList.
-    }*/
+    }
 
 
 

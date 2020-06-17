@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import top.clifton.community.exception.QuestionNotFoundException;
 import top.clifton.community.pojo.Comment;
 import top.clifton.community.pojo.Question;
+import top.clifton.community.redis.RedisConstants;
 import top.clifton.community.redis.RedisService;
 import top.clifton.community.service.CommentService;
 import top.clifton.community.service.QuestionService;
@@ -51,7 +52,7 @@ public class QuestionController {
 
         //questionService.incViewCount(id);
         //增加阅读数
-        redisService.incCount("count_"+id, "view");
+        redisService.incCount("count_"+id, RedisConstants.VIEW);
 
         return "question";
     }

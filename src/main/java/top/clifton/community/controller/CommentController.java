@@ -1,23 +1,23 @@
 package top.clifton.community.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
-import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import top.clifton.community.enums.CodeEnum;
+import com.alibaba.fastjson.JSON;
+
 import top.clifton.community.dto.JsonDto;
-import top.clifton.community.enums.NotificationTypeEnum;
+import top.clifton.community.enums.CodeEnum;
 import top.clifton.community.pojo.Comment;
-import top.clifton.community.pojo.Notification;
 import top.clifton.community.pojo.User;
+import top.clifton.community.redis.RedisConstants;
+import top.clifton.community.redis.RedisService;
 import top.clifton.community.service.CommentService;
 import top.clifton.community.websocket.QuestionWebSocket;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * @author Clifton
@@ -26,6 +26,9 @@ import java.util.List;
 @Controller
 public class CommentController
 {
+
+    @Autowired
+    private RedisService redisService;
 
     @Autowired
     private CommentService commentService;
@@ -45,7 +48,13 @@ public class CommentController
 
 //        QuestionWebSocket.systemSendMessageToUser(String.valueOf(user.getAccountId()), message);
         //当评论后，需向所有打开连接并且 questionId一样 的人发消息
-        QuestionWebSocket.sendInfo(String.valueOf(questionId), message);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                QuestionWebSocket.sendInfo(String.valueOf(questionId), message);
+                redisService.incCount("count_"+questionId, RedisConstants.COMMENT);
+            }
+        }).start();
 
         return new JsonDto(CodeEnum.SUCCESS);
     }

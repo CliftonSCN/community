@@ -24,7 +24,7 @@ public class QuestionWebSocket
     private static int onlineCount = 0;
 
     // concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
-//    private static ConcurrentHashMap<String, QuestionWebSocket> webSocketMap = new ConcurrentHashMap<>();
+    //    private static ConcurrentHashMap<String, QuestionWebSocket> webSocketMap = new ConcurrentHashMap<>();
     //<问题id, <用户id, webSocket对象>>
     private static ConcurrentHashMap<String, Map<String, QuestionWebSocket>> webSocketMap = new ConcurrentHashMap<>();
 
